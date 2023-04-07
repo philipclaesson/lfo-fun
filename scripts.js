@@ -65,6 +65,7 @@ function getLfoFrequencyFromMousePosition(event) {
     return lfoFrequency;
 }
 
+// mouse down
 document.addEventListener('mousedown', (event) => {
     isMouseDown = true;
     initializeAudio();
@@ -74,6 +75,16 @@ document.addEventListener('mousedown', (event) => {
     document.body.style.backgroundColor = getColorFromMousePosition(event);
 });
 
+// touching screen
+document.addEventListener('touchstart', (event) => {
+    event.preventDefault();
+    initializeAudio();
+    const frequency = getFrequencyFromMousePosition(event.touches[0]);
+    const lfoFrequency = getLfoFrequencyFromMousePosition(event.touches[0]);
+    startTone(frequency, lfoFrequency);
+});
+
+// moving mouse
 document.addEventListener('mousemove', (event) => {
     if (!oscillator || !lfo || !isMouseDown) return;
     const frequency = getFrequencyFromMousePosition(event);
@@ -85,29 +96,33 @@ document.addEventListener('mousemove', (event) => {
     document.body.style.backgroundColor = getColorFromMousePosition(event);
 });
 
+// moving finger
+document.addEventListener('touchmove', (event) => {
+    event.preventDefault();
+    if (!oscillator || !lfo || !isMouseDown) return;
+    const frequency = getFrequencyFromMousePosition(event.touches[0]);
+    const lfoFrequency = getLfoFrequencyFromMousePosition(event.touches[0]);
+    oscillator.frequency.value = frequency;
+    lfo.frequency.value = lfoFrequency;
+    oscillatorFrequencyValue.textContent = frequency.toFixed(2);
+    lfoFrequencyValue.textContent = lfoFrequency.toFixed(2);
+    document.body.style.backgroundColor = getColorFromMousePosition(event.touches[0]);
+});
+
+// lifting mouse
 document.addEventListener('mouseup', () => {
     isMouseDown = false;
     stopTone();
 });
 
-document.addEventListener('touchstart', (event) => {
-    event.preventDefault();
-    initializeAudio();
-    const frequency = getFrequencyFromMousePosition(event.touches[0]);
-    const lfoFrequency = getLfoFrequencyFromMousePosition(event.touches[0]);
-    startTone(frequency, lfoFrequency);
-});
-
-document.addEventListener('touchmove', (event) => {
-    event.preventDefault();
-    if (!oscillator || !lfo) return;
-    const frequency = getFrequencyFromMousePosition(event.touches[0]);
-    const lfoFrequency = getLfoFrequencyFromMousePosition(event.touches[0]);
-    oscillator.frequency.value = frequency;
-    lfo.frequency.value = lfoFrequency;
-});
-
+// lifting finger
 document.addEventListener('touchend', () => {
+    isMouseDown = false;
+    stopTone();
+});
+
+document.addEventListener('touchcancel', () => {
+    isMouseDown = false;
     stopTone();
 });
 

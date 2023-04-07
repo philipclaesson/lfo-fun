@@ -1,6 +1,12 @@
 body {
     font-family: Tahoma, sans-serif;
     text-align: center;
+    /* prevent selecting the text when swiping around */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .container {
