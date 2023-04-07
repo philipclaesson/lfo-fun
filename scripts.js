@@ -3,6 +3,11 @@ let oscillator;
 let gainNode;
 let lfo;
 let lfoGainNode;
+let isMouseDown = false;
+
+const waveforms = ['sine', 'square', 'sawtooth', 'triangle'];
+let oscillatorWaveformIndex = 0;
+let lfoWaveformIndex = 0;
 
 function initializeAudio() {
     if (audioContext) return;
@@ -18,11 +23,11 @@ function initializeAudio() {
 
 function startTone(frequency, lfoFrequency) {
     oscillator = audioContext.createOscillator();
-    oscillator.type = 'sine';
+    oscillator.type = waveforms[oscillatorWaveformIndex]; // Add this line
     oscillator.frequency.value = frequency;
 
     lfo = audioContext.createOscillator();
-    lfo.type = 'sine';
+    lfo.type = waveforms[lfoWaveformIndex]; // Add this line
     lfo.frequency.value = lfoFrequency;
 
     lfo.connect(lfoGainNode);
@@ -55,27 +60,33 @@ function getFrequencyFromMousePosition(event) {
 function getLfoFrequencyFromMousePosition(event) {
     const windowWidth = window.innerWidth;
     const mouseX = event.clientX;
-    const lfoFrequencyRange = 100 - 10;
-    const lfoFrequency = 10 + (mouseX / windowWidth) * lfoFrequencyRange;
+    const lfoFrequencyRange = 10 - .1;
+    const lfoFrequency = .1 + (mouseX / windowWidth) * lfoFrequencyRange;
     return lfoFrequency;
 }
 
 document.addEventListener('mousedown', (event) => {
+    isMouseDown = true;
     initializeAudio();
     const frequency = getFrequencyFromMousePosition(event);
     const lfoFrequency = getLfoFrequencyFromMousePosition(event);
     startTone(frequency, lfoFrequency);
+    document.body.style.backgroundColor = getColorFromMousePosition(event);
 });
 
 document.addEventListener('mousemove', (event) => {
-    if (!oscillator || !lfo) return;
+    if (!oscillator || !lfo || !isMouseDown) return;
     const frequency = getFrequencyFromMousePosition(event);
     const lfoFrequency = getLfoFrequencyFromMousePosition(event);
     oscillator.frequency.value = frequency;
     lfo.frequency.value = lfoFrequency;
+    oscillatorFrequencyValue.textContent = frequency.toFixed(0);
+    lfoFrequencyValue.textContent = lfoFrequency.toFixed(1);
+    document.body.style.backgroundColor = getColorFromMousePosition(event);
 });
 
 document.addEventListener('mouseup', () => {
+    isMouseDown = false;
     stopTone();
 });
 
@@ -99,3 +110,38 @@ document.addEventListener('touchmove', (event) => {
 document.addEventListener('touchend', () => {
     stopTone();
 });
+
+const oscillatorWaveformBtn = document.getElementById('oscillatorWaveformBtn');
+const lfoWaveformBtn = document.getElementById('lfoWaveformBtn');
+const oscillatorFrequencyValue = document.getElementById('oscillatorFrequencyValue');
+const lfoFrequencyValue = document.getElementById('lfoFrequencyValue');
+
+oscillatorWaveformBtn.addEventListener('click', () => {
+    oscillatorWaveformIndex = (oscillatorWaveformIndex + 1) % waveforms.length;
+    if (oscillator) {
+        oscillator.type = waveforms[oscillatorWaveformIndex];
+    }
+    oscillatorWaveformBtn.textContent = waveforms[oscillatorWaveformIndex];
+});
+
+
+lfoWaveformBtn.addEventListener('click', () => {
+    lfoWaveformIndex = (lfoWaveformIndex + 1) % waveforms.length;
+    if (lfo) {
+        lfo.type = waveforms[lfoWaveformIndex];
+    }
+    lfoWaveformBtn.textContent = waveforms[lfoWaveformIndex];
+});
+
+// Background color fun!
+function getColorFromMousePosition(event) {
+    const xRatio = event.clientX / window.innerWidth;
+    const yRatio = event.clientY / window.innerHeight;
+
+    const r = Math.floor(xRatio * 255);
+    const g = Math.floor(yRatio * 255);
+    const b = Math.floor((1 - xRatio) * (1 - yRatio) * 255);
+
+    return `rgb(${r}, ${g}, ${b})`;
+}
+

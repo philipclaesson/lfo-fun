@@ -1,16 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sinus Tone Generator</title>
+    <title>LFO</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="container">
-        <h1>Sinus Tone Generator</h1>
-        <p>Click and hold anywhere to play the tone. The vertical position of the cursor determines the frequency.</p>
+        <!-- <h1>Sinus Tone Generator</h1> -->
+        <p>Click and hold anywhere to make some noise.</p>
+        <footer>
+            <div class="oscillator">
+                <h2>Oscillator</h2>
+                <button id="oscillatorWaveformBtn">sine</button>
+                <p><span id="oscillatorFrequencyValue">100</span> Hz</p>
+            </div>
+
+            <div class="lfo">
+                <h2>LFO</h2>
+                <button id="lfoWaveformBtn">sine</button>
+                <p><span id="lfoFrequencyValue">10</span> Hz</p>
+            </div>
+        </footer>
     </div>
     <script src="scripts.js"></script>
 </body>
+
 </html>
