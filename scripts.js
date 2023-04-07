@@ -9,10 +9,12 @@ const waveforms = ['sine', 'square', 'sawtooth', 'triangle'];
 let oscillatorWaveformIndex = 0;
 let lfoWaveformIndex = 0;
 
-function initializeAudio() {
+function createAudioContext() {
     if (audioContext) return;
-
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
+}
+
+function initializeAudio() {
     gainNode = audioContext.createGain();
     gainNode.gain.value = 0.1;
     gainNode.connect(audioContext.destination);
@@ -68,6 +70,7 @@ function getLfoFrequencyFromMousePosition(event) {
 // mouse down
 document.addEventListener('mousedown', (event) => {
     isMouseDown = true;
+    createAudioContext();
     initializeAudio();
     const frequency = getFrequencyFromMousePosition(event);
     const lfoFrequency = getLfoFrequencyFromMousePosition(event);
@@ -76,13 +79,15 @@ document.addEventListener('mousedown', (event) => {
 });
 
 // touching screen
-document.addEventListener('touchstart', (event) => {
+document.addEventListener('touchstart', async (event) => {
+    isMouseDown = true;
     event.preventDefault();
+    createAudioContext();
     initializeAudio();
     const frequency = getFrequencyFromMousePosition(event.touches[0]);
     const lfoFrequency = getLfoFrequencyFromMousePosition(event.touches[0]);
     startTone(frequency, lfoFrequency);
-});
+}, { passive: false });
 
 // moving mouse
 document.addEventListener('mousemove', (event) => {
@@ -107,7 +112,7 @@ document.addEventListener('touchmove', (event) => {
     oscillatorFrequencyValue.textContent = frequency.toFixed(2);
     lfoFrequencyValue.textContent = lfoFrequency.toFixed(2);
     document.body.style.backgroundColor = getColorFromMousePosition(event.touches[0]);
-});
+}, { passive: false });
 
 // lifting mouse
 document.addEventListener('mouseup', () => {

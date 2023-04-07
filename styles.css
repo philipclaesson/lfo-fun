@@ -1,6 +1,7 @@
 body {
     font-family: Tahoma, sans-serif;
     text-align: center;
+    background-color: #0b67bd;
     /* prevent selecting the text when swiping around */
     -webkit-touch-callout: none;
     -webkit-user-select: none;
