@@ -14,17 +14,17 @@
         <!-- <h1>Sinus Tone Generator</h1> -->
         <p class="block fixed">Click and hold anywhere to make some noise.</p>
         <footer>
-            <div class="osc lfo block fixed">
+            <button id="lfoWaveformBtn" class="osc lfo block">
                 <h2>LFO</h2>
-                <button id="lfoWaveformBtn" class="wave-btn block inline">sine</button>
+                <p id="lfoWaveformLabel" class="wave-btn block">sine</p>
                 <p class="block round fixed"><span id="lfoFrequencyValue">10</span> Hz</p>
-            </div>
+            </button>
 
-            <div class="osc oscillator block fixed">
+            <button id="oscillatorWaveformBtn" class="osc oscillator block">
                 <h2>Osc</h2>
-                <button id="oscillatorWaveformBtn" class="wave-btn block inline">sine</button>
+                <p id="oscillatorWaveformLabel" class="wave-btn block">sine</p>
                 <p class="block round fixed"><span id="oscillatorFrequencyValue">100</span> Hz</p>
-            </div>
+            </button>
         </footer>
     </div>
     <script src="scripts.js"></script>

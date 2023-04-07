@@ -136,22 +136,31 @@ const lfoWaveformBtn = document.getElementById('lfoWaveformBtn');
 const oscillatorFrequencyValue = document.getElementById('oscillatorFrequencyValue');
 const lfoFrequencyValue = document.getElementById('lfoFrequencyValue');
 
-oscillatorWaveformBtn.addEventListener('click', () => {
+function onOscillatorWaveformBtnClick() {
+    console.log('click')
     oscillatorWaveformIndex = (oscillatorWaveformIndex + 1) % waveforms.length;
     if (oscillator) {
         oscillator.type = waveforms[oscillatorWaveformIndex];
     }
-    oscillatorWaveformBtn.textContent = waveforms[oscillatorWaveformIndex];
-});
+    let oscillatorformLabel = document.getElementById('oscillatorWaveformLabel');
+    oscillatorformLabel.textContent = waveforms[oscillatorWaveformIndex];
+}
 
-
-lfoWaveformBtn.addEventListener('click', () => {
+function onLfoWaveformBtnClick() {
     lfoWaveformIndex = (lfoWaveformIndex + 1) % waveforms.length;
     if (lfo) {
         lfo.type = waveforms[lfoWaveformIndex];
     }
-    lfoWaveformBtn.textContent = waveforms[lfoWaveformIndex];
-});
+    let lfoWaveformLabel = document.getElementById('lfoWaveformLabel');
+    lfoWaveformLabel.textContent = waveforms[lfoWaveformIndex];
+}
+
+oscillatorWaveformBtn.addEventListener('click', onOscillatorWaveformBtnClick);
+oscillatorWaveformBtn.addEventListener('touchstart', onOscillatorWaveformBtnClick);
+
+
+lfoWaveformBtn.addEventListener('click', onLfoWaveformBtnClick);
+lfoWaveformBtn.addEventListener('touchstart', onLfoWaveformBtnClick);
 
 // Background color fun!
 function getColorFromMousePosition(event) {
