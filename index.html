@@ -6,23 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LFO</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/blocks.css/dist/blocks.min.css" />
 </head>
 
 <body>
     <div class="container">
         <!-- <h1>Sinus Tone Generator</h1> -->
-        <p>Click and hold anywhere to make some noise.</p>
+        <p class="block fixed">Click and hold anywhere to make some noise.</p>
         <footer>
-            <div class="oscillator">
-                <h2>Oscillator</h2>
-                <button id="oscillatorWaveformBtn">sine</button>
-                <p><span id="oscillatorFrequencyValue">100</span> Hz</p>
+            <div class="osc lfo block fixed">
+                <h2>LFO</h2>
+                <button id="lfoWaveformBtn" class="wave-btn block inline">sine</button>
+                <p class="block round fixed"><span id="lfoFrequencyValue">10</span> Hz</p>
             </div>
 
-            <div class="lfo">
-                <h2>LFO</h2>
-                <button id="lfoWaveformBtn">sine</button>
-                <p><span id="lfoFrequencyValue">10</span> Hz</p>
+            <div class="osc oscillator block fixed">
+                <h2>Oscillator</h2>
+                <button id="oscillatorWaveformBtn" class="wave-btn block inline">sine</button>
+                <p class="block round fixed"><span id="oscillatorFrequencyValue">100</span> Hz</p>
             </div>
         </footer>
     </div>

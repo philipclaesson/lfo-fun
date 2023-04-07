@@ -25,6 +25,15 @@ html {
     padding: 0;
 }
 
+.osc {
+    width: 20%;
+    align-items: center;
+}
+
+.wave-btn {
+    /* align-self: center; */
+}
+
 footer {
     position: fixed;
     bottom: 0;
@@ -33,7 +42,5 @@ footer {
     width: 100%;
     display: flex;
     justify-content: space-around;
-    background-color: #f8f8f8;
     padding: 10px 0;
-    border-top: 1px solid #ccc;
 }
