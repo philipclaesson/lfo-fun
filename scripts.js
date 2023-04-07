@@ -1,39 +1,101 @@
-const frequencySlider = document.getElementById('frequencySlider');
-const frequencyValue = document.getElementById('frequencyValue');
-
 let audioContext;
 let oscillator;
 let gainNode;
+let lfo;
+let lfoGainNode;
 
 function initializeAudio() {
     if (audioContext) return;
 
     audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    oscillator = audioContext.createOscillator();
     gainNode = audioContext.createGain();
-
-    oscillator.type = 'sine';
-    oscillator.frequency.value = 100;
     gainNode.gain.value = 0.1;
-
-    oscillator.connect(gainNode);
     gainNode.connect(audioContext.destination);
-    oscillator.start();
+
+    lfoGainNode = audioContext.createGain();
+    lfoGainNode.gain.value = 50; // Adjust this value to control the modulation depth
 }
 
-frequencySlider.addEventListener('mousedown', () => {
-    initializeAudio();
-});
+function startTone(frequency, lfoFrequency) {
+    oscillator = audioContext.createOscillator();
+    oscillator.type = 'sine';
+    oscillator.frequency.value = frequency;
 
-frequencySlider.addEventListener('touchstart', () => {
-    initializeAudio();
-});
+    lfo = audioContext.createOscillator();
+    lfo.type = 'sine';
+    lfo.frequency.value = lfoFrequency;
 
-frequencySlider.addEventListener('input', (event) => {
-    if (!audioContext) {
-        initializeAudio();
+    lfo.connect(lfoGainNode);
+    lfoGainNode.connect(oscillator.frequency);
+    oscillator.connect(gainNode);
+
+    oscillator.start();
+    lfo.start();
+}
+
+function stopTone() {
+    if (oscillator) {
+        oscillator.stop();
+        oscillator.disconnect();
     }
-    const newFrequency = event.target.value;
-    oscillator.frequency.value = newFrequency;
-    frequencyValue.textContent = newFrequency;
+    if (lfo) {
+        lfo.stop();
+        lfo.disconnect();
+    }
+}
+
+function getFrequencyFromMousePosition(event) {
+    const windowHeight = window.innerHeight;
+    const mouseY = event.clientY;
+    const frequencyRange = 1000 - 100;
+    const frequency = 1000 - (mouseY / windowHeight) * frequencyRange;
+    return frequency;
+}
+
+function getLfoFrequencyFromMousePosition(event) {
+    const windowWidth = window.innerWidth;
+    const mouseX = event.clientX;
+    const lfoFrequencyRange = 100 - 10;
+    const lfoFrequency = 10 + (mouseX / windowWidth) * lfoFrequencyRange;
+    return lfoFrequency;
+}
+
+document.addEventListener('mousedown', (event) => {
+    initializeAudio();
+    const frequency = getFrequencyFromMousePosition(event);
+    const lfoFrequency = getLfoFrequencyFromMousePosition(event);
+    startTone(frequency, lfoFrequency);
+});
+
+document.addEventListener('mousemove', (event) => {
+    if (!oscillator || !lfo) return;
+    const frequency = getFrequencyFromMousePosition(event);
+    const lfoFrequency = getLfoFrequencyFromMousePosition(event);
+    oscillator.frequency.value = frequency;
+    lfo.frequency.value = lfoFrequency;
+});
+
+document.addEventListener('mouseup', () => {
+    stopTone();
+});
+
+document.addEventListener('touchstart', (event) => {
+    event.preventDefault();
+    initializeAudio();
+    const frequency = getFrequencyFromMousePosition(event.touches[0]);
+    const lfoFrequency = getLfoFrequencyFromMousePosition(event.touches[0]);
+    startTone(frequency, lfoFrequency);
+});
+
+document.addEventListener('touchmove', (event) => {
+    event.preventDefault();
+    if (!oscillator || !lfo) return;
+    const frequency = getFrequencyFromMousePosition(event.touches[0]);
+    const lfoFrequency = getLfoFrequencyFromMousePosition(event.touches[0]);
+    oscillator.frequency.value = frequency;
+    lfo.frequency.value = lfoFrequency;
+});
+
+document.addEventListener('touchend', () => {
+    stopTone();
 });
